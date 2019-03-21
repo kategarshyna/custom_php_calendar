@@ -1,3 +1,11 @@
+<?php
+require __DIR__ . '/Calendar.php';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $calendar    = new Calendar( $_POST['date'] );
+    $weekDayName = $calendar->getWeekDayName();
+}
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,15 +20,19 @@
     <title>Custom PHP Calendar</title>
 </head>
 <body>
-<?php include_once "calendar.php";?>
+
 <div class="container">
     <h1>Custom PHP Calendar</h1>
     <form method="post" action="">
         <div class="form-group col-md-6">
             <label for="date">Enter date (dd-mm-yyyy) / (dd.mm.yyyy) / (dd/mm/yyyy):</label>
-            <input type="text" id="date" class="form-control <?= !empty($error) ? 'is-invalid' : '' ?> <?= !empty($weekDayResult) ? 'is-valid' : '' ?>" name="date" value="<?= $_POST['date'] ?>" placeholder="01-01-1990" required="required"/>
-            <div class="invalid-feedback"><?= $error ?></div>
-            <div class="valid-feedback"><?= $weekDayResult ?></div>
+            <input type="text" id="date"
+                   class="form-control
+                   <?= !empty($calendar->errorMessage) ? 'is-invalid' : '' ?>
+                   <?= !empty($weekDayName) ? 'is-valid' : '' ?>"
+                   name="date" value="<?= $_POST['date'] ?>" placeholder="01-01-1990" required="required"/>
+            <div class="invalid-feedback"><?= $calendar->errorMessage ?></div>
+            <div class="valid-feedback"><?= $weekDayName ?></div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
