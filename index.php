@@ -1,8 +1,14 @@
 <?php
+
 require __DIR__ . '/Calendar.php';
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $calendar    = new Calendar( $_POST['date'] );
-    $weekDayName = $calendar->getWeekDayName();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['date'])) {
+    try {
+        $calendar = new Calendar($_POST['date']);
+        $weekDayName = $calendar->getWeekDayName();
+    } catch (InvalidArgumentException $e) {
+        $errorMessage = $e->getMessage();
+    }
 }
 ?>
 
@@ -28,11 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <label for="date">Enter date (dd-mm-yyyy) / (dd.mm.yyyy) / (dd/mm/yyyy):</label>
             <input type="text" id="date"
                    class="form-control
-                   <?= !empty($calendar->errorMessage) ? 'is-invalid' : '' ?>
-                   <?= !empty($weekDayName) ? 'is-valid' : '' ?>"
+                       <?= !empty($errorMessage) ? 'is-invalid' : '' ?>
+                       <?= !empty($weekDayName) ? 'is-valid' : '' ?>"
                    name="date" value="<?= $_POST['date'] ?>" placeholder="01-01-1990" required="required"/>
-            <div class="invalid-feedback"><?= $calendar->errorMessage ?></div>
-            <div class="valid-feedback"><?= $weekDayName ?></div>
+            <div class="invalid-feedback"><?= $errorMessage ?? '' ?></div>
+            <div class="valid-feedback"><?= $weekDayName ?? '' ?></div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
