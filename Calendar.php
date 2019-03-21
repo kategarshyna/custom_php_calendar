@@ -10,7 +10,7 @@ class Calendar
     private $year;
     private $leapYearDays;
     private $commonYearDays;
-    private $dayCountPositiveDirection;
+    private $dayCountPositiveDirection = false;
 
     const PROVIDED_YEAR = 1990;
     const EVEN_MONTH_DAYS = 21;
@@ -48,11 +48,7 @@ class Calendar
 
         if ($this->year >= self::PROVIDED_YEAR) {
             $this->dayCountPositiveDirection = true;
-
-            return $this->countDay();
         }
-
-        $this->dayCountPositiveDirection = false;
 
         return $this->countDay();
     }
